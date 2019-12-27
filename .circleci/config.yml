@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  rust: glotrade/rust@0.1.3
+jobs:
+  build:
+    executor: rust/default
+    working_directory: ~/dirkspace
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/dirkspace
+      - rust/update_toolchain
+      - rust/build:
+          release: true
+      - store_artifacts:
+          path: ~/dirkspace/target/release/hatch
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/release/hatch
+
+
+  publish-github-release:
+    docker:
+      - image: circleci/golang:1.12
+    working_directory: ~/hatchspace
+    steps:
+      - attach_workspace:
+          at: ~/hatchspace
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ~/hatchspace/target/release/hatch
+
+workflows:
+  main:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+      - publish-github-release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/

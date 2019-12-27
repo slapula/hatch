@@ -1,0 +1,21 @@
+name: hatch
+version: "0.1.0"
+author: Aaron J. Smith <ajsmith10381@gmail.com>
+about: "Open SSH sessions using AWS Systems Manager's Session feature"
+args:
+    - list:
+        help: "List instances available for remote sessions via AWS Systems Manager"
+        short: l
+        long: list
+        takes_value: false
+    - region:
+        help: "AWS Region (Default: 'us-east-1')"
+        short: r
+        long: region
+        value_name: STRING
+        takes_value: true
+    - INSTANCE:
+        help: "Name, ID, or IP address of target EC2 instance"
+        required: false
+        conflicts_with: list
+        index: 1

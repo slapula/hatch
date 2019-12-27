@@ -1,0 +1,19 @@
+[package]
+name = "hatch"
+version = "0.1.0"
+authors = ["Aaron J. Smith <ajsmith10381@gmail.com>"]
+edition = "2018"
+categories = ["aws", "command-line-interface"]
+description = "Access EC2 instances using the AWS Session Manager feature"
+readme = "README.md"
+homepage = "https://github.com/slapula/hatch"
+repository = "https://github.com/slapula/hatch"
+travis-ci = { repository = "slapula/hatch", branch = "master" }
+keywords = ["aws", "ec2", "ssm", "ssh", "cli"]
+
+[dependencies]
+clap = {version = "2.33.0", features = ["yaml"]}
+yaml-rust = "0.4.3"
+prettytable-rs = "0.6.5"
+rusoto_core = "0.42.0"
+rusoto_ssm = "0.42.0"
